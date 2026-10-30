@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Gedankenpflanzen</title>
+<script>
+  (function () {
+    var IOS = "https://apps.apple.com/de/app/id6761543902";
+    var ANDROID = "https://play.google.com/store/apps/details?id=com.gedankenpflanzen.app";
+    var ua = navigator.userAgent || "";
+    var isIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+    var isAndroid = /Android/i.test(ua);
+    var qs = window.location.search.replace(/^\?/, "");
+    if (isIOS) {
+      window.location.replace(IOS);
+    } else if (isAndroid) {
+      window.location.replace(ANDROID + (qs ? "&referrer=" + encodeURIComponent(qs) : ""));
+    }
+  })();
+</script>
+<style>
+  :root { --bg:#fbf7f2; --fg:#3b2f2a; --accent:#c8694a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1f1a17; --fg:#f2e9e2; } }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:var(--bg); color:var(--fg); font-family:system-ui,-apple-system,sans-serif; text-align:center; padding:16px; }
+  h1 { font-size:1.6rem; margin:0 0 .5rem; }
+  p { opacity:.8; margin:0 0 1.5rem; }
+  a.btn { display:inline-block; margin:6px; padding:12px 20px; border-radius:999px;
+          background:var(--accent); color:#fff; text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+  <main>
+    <h1>🌸 Gedankenpflanzen</h1>
+    <p>Hol dir die App auf dein Handy:</p>
+    <a class="btn" href="https://apps.apple.com/de/app/id6761543902">App Store</a>
+    <a class="btn" href="https://play.google.com/store/apps/details?id=com.gedankenpflanzen.app">Google Play</a>
+  </main>
+</body>
+</html>
