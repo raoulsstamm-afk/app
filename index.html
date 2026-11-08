@@ -13,11 +13,40 @@
     var isIOS = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
     var isAndroid = /Android/i.test(ua);
     var qs = window.location.search.replace(/^\?/, "");
-    if (isIOS) {
-      window.location.replace(IOS);
-    } else if (isAndroid) {
-      window.location.replace(ANDROID + (qs ? "&referrer=" + encodeURIComponent(qs) : ""));
+
+    function weiter() {
+      if (isIOS) {
+        window.location.replace(IOS);
+      } else if (isAndroid) {
+        window.location.replace(ANDROID + (qs ? "&referrer=" + encodeURIComponent(qs) : ""));
+      }
     }
+
+    // Klick-Zählung pro Reel: nur wenn ?v=<Kürzel> im Link steht.
+    // Ohne Cookies, ohne Speicher, ohne Personenprofil: es wird nur gezählt,
+    // welches Kürzel auf welcher Plattform geklickt wurde. Die Weiterleitung
+    // passiert immer, auch wenn die Zählung scheitert (spätestens nach 700 ms).
+    var m = /(?:^|&)v=([A-Za-z0-9_-]{1,24})(?:&|$)/.exec(qs);
+    if (!m || !window.fetch) { weiter(); return; }
+    var fertig = false;
+    function einmal() { if (!fertig) { fertig = true; weiter(); } }
+    setTimeout(einmal, 700);
+    try {
+      fetch("https://eu.i.posthog.com/i/v0/e/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          api_key: "phc_ny8b2nihm62FQrcCgrnGtpUVhR3fKicvrfYzR4D9gmrZ",
+          event: "smartlink_click",
+          distinct_id: "smartlink_" + Math.random().toString(36).slice(2) + Date.now().toString(36),
+          properties: {
+            v: m[1],
+            plattform: isIOS ? "ios" : (isAndroid ? "android" : "andere"),
+            $process_person_profile: false
+          }
+        })
+      }).then(einmal, einmal);
+    } catch (e) { einmal(); }
   })();
 </script>
 <style>
